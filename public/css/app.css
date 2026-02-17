@@ -14096,6 +14096,14 @@ textarea.form-control-lg {
   background-color: rgb(158.2, 197, 254.2) !important;
 }
 
+.news-brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .news-header {
   position: fixed;
   top: 0;
@@ -14236,6 +14244,16 @@ textarea.form-control-lg {
   aspect-ratio: 16/9;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.news-card {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.news-card:hover,
+.news-card:focus-within {
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.18) !important;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 580px) {

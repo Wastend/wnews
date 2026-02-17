@@ -19,6 +19,13 @@
   background-color: $blue-200 !important;
 }
 
+.news-brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
 .news-header {
   position: fixed;
   top: 0;
@@ -160,6 +167,16 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+}
+
+.news-card {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.news-card:hover,
+.news-card:focus-within {
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.18) !important;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 580px) {

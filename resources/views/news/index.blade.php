@@ -13,7 +13,7 @@
                             ? (filter_var($post->image, FILTER_VALIDATE_URL) ? $post->image : asset('images/' . ltrim($post->image, '/')))
                             : 'https://via.placeholder.com/640x360?text=News';
                     @endphp
-                    <article class="card h-100 shadow-sm">
+                    <article class="card h-100 shadow-sm news-card">
                         <a href="{{ route('news.show', $post) }}" class="text-decoration-none">
                             <img
                                 src="{{ $imageSrc }}"

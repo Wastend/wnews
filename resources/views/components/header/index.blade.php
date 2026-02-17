@@ -1,6 +1,7 @@
 <header class="news-header">
     @php
       $biSprite = asset('vendor/bootstrap-icons/bootstrap-icons.svg');
+      $brandLogo = asset('favicon.png');
       $isHome = request()->routeIs('home.index');
       $isNews = request()->is('news') || request()->is('news/*');
     @endphp
@@ -8,9 +9,7 @@
       <div class="container">
         <div class="d-flex align-items-center justify-content-between gap-3">
           <a href="{{ route('home.index') }}" class="d-flex align-items-center text-dark text-decoration-none flex-shrink-0" aria-label="Главная">
-            <svg class="bi me-2" width="36" height="28" role="img" aria-label="WNews">
-              <use href="{{ $biSprite }}#newspaper"></use>
-            </svg>
+            <img src="{{ $brandLogo }}" alt="WNews" class="news-brand-logo me-2">
             <span class="fw-bold news-header__brand-text">WNews</span>
           </a>
 

@@ -1,15 +1,13 @@
 <footer class="news-footer mt-5">
     @php
-      $biSprite = asset('vendor/bootstrap-icons/bootstrap-icons.svg');
+      $brandLogo = asset('favicon.png');
       $isNews = request()->is('news') || request()->is('news/*');
     @endphp
     <div class="container py-4 py-lg-5">
       <div class="news-footer__grid">
         <div class="news-footer__brand-col">
           <a href="{{ route('home.index') }}" class="d-inline-flex align-items-center text-decoration-none news-footer__brand">
-            <svg class="bi me-2" width="28" height="22" role="img" aria-label="WNews">
-              <use href="{{ $biSprite }}#newspaper"></use>
-            </svg>
+            <img src="{{ $brandLogo }}" alt="WNews" class="news-brand-logo me-2">
             <span class="fw-bold">WNews</span>
           </a>
         </div>
