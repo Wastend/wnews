@@ -9,75 +9,64 @@ use App\Models\News;
 class NewsController extends Controller
 {
     public function index() {
-        $posts = News::all();
+        $posts = News::query()
+            ->where('is_published', 1)
+            ->latest()
+            ->get();
 
-        return view('news', ['posts' => $posts]);
+        return view('news.index', ['posts' => $posts]);
+    }
+
+    public function show(News $news){
+        return view('news.show', ['post' => $news]);
     }
 
     public function create() {
-        $postsArr = [
-            [
-                "title" => "Поляк нашел бобра и делал с ним всякое",
-                "content" => "Житель поселка Фреска из Польши нашел у себя под домом бобра, после чего забрал его к себе в сарай. Там он его накормил, погладил и отпустил",
-                "image" => "imageBobr.png",
-                "likes" => 31,
-                "is_published" => 1,
-            ],
-            [
-                "title" => "Сельский житель призвал дождь",
-                "content" => "Житель деревни Майнкрафт решил испытать новый режим в жизни. После этой мысли он зашел в консоль и вызвал дождь, что вызвало негодование среди соседей т.к. дело происходило зимой",
-                "image" => "imageRain.jpeg",
-                "likes" => 1,
-                "is_published" => 0,
-            ],
-        ];
-
-        foreach($postsArr as $item){
-            News::create($item);
-        }
+        return view('news.create');
     }
 
-    public function update() {
-        $post = News::find(1);
-
-        $post->update([
-            'likes' => 11
+    public function store(Request $request) {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'content' => 'required|string',
+            'image' => 'nullable|string|max:2048',
         ]);
+
+        $data['is_published'] = $request->boolean('is_published');
+
+        $post = News::create($data);
+
+        return redirect()
+            ->route('news.show', $post)
+            ->with('success', 'Новость успешно создана.');
     }
 
-    public function delete() {
-        $post = News::find(2);
-
-        $post->delete();
+    public function edit(News $news) {
+       return view('news.edit', ['post' => $news]);
     }
 
-    public function firstOrCreate() {
+    public function update(Request $request, News $news) {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'content' => 'required|string',
+            'image' => 'nullable|string|max:2048',
+        ]);
 
-        $anotherPost = [
-            "title" => "В сентябре мороз",
-            "content" => "В сентабре погода -20 градусов",
-            "image" => "weather.png",
-            "likes" => 123,
-            "is_published" => 1,
-        ];
+        $data['is_published'] = $request->boolean('is_published');
+        $news->update($data);
 
-        $post = News::firstOrCreate([
-            "title" => "В сентябре холодно"
-        ],$anotherPost);
+        return redirect()
+            ->route('news.show', $news)
+            ->with('success', 'Новость успешно обновлена.');
     }
 
-    public function updateOrCreate() {
+    public function destroy(Request $request, News $news) {
+        $news->delete();
 
-        $anotherPost = [
-            "title" => "В сентябре мороз",
-            "content" => "В сентабре погода -20 градусов",
-            "image" => "weather.png",
-            "likes" => 1,
-            "is_published" => 1,
-        ];
-
-        $post = News::updateOrCreate([
-            "title" => "В сентябре холодно"
-        ],$anotherPost);
+        return redirect()
+            ->route('news.index')
+            ->with('success', 'Новость успешно удалена.');
     }
 }
