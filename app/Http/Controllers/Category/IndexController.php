@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Category;
 
+use App\Http\Controllers\Controller;
 use App\Models\Category;
 
-class CategoryController extends Controller
+class IndexController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         $categories = Category::query()
             ->withCount([
