@@ -40,5 +40,8 @@
                 </div>
             @endforelse
         </div>
+        <div class="d-flex justify-content-center mt-4">
+            {{ $news->links() }}
+        </div>
     </div>
 @endsection

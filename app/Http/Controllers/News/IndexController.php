@@ -11,10 +11,9 @@ class IndexController extends Controller
 
     public function __invoke()
     {
-        $news = News::query()
-            ->where('is_published', 1)
+        $news = News::where('is_published', 1)
             ->latest()
-            ->get();
+            ->paginate(12);
 
         return view('news.index', ['news' => $news]);
     }

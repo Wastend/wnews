@@ -13,11 +13,10 @@ class CategoryController extends Controller
 
     public function __invoke(Category $category)
     {
-        $posts = News::query()
-            ->where('is_published', 1)
+        $posts = News::where('is_published', 1)
             ->where('category_id', $category->id)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('news.category', [
             'category' => $category,

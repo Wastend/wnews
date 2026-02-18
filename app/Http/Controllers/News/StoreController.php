@@ -8,19 +8,14 @@ use App\Http\Requests\Post\StoreRequest;
 use App\Models\News;
 use Illuminate\Http\Request;
 
-class StoreController extends Controller
+class StoreController extends BaseController
 {
 
     public function __invoke(StoreRequest $request)
     {
         $data = $request->validated();
 
-        $tags = $data['tags'];
-        unset($data['tags']);
-
-        $post = News::create($data);
-
-        $post->tags()->attach($tags);
+        $post = $this->service->store($data);
 
         return redirect()
             ->route('news.show', $post)
