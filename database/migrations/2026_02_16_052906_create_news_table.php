@@ -20,6 +20,11 @@ class CreateNewsTable extends Migration
             $table->string('image')->nullable();
             $table->unsignedBigInteger('likes')->default(0);
             $table->boolean('is_published')->default(1);
+
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->index('category_id', 'news_category_idx');
+            $table->foreign('category_id','news_category_fk')->on('categories')->references('id');
+
             $table->timestamps();
 
             $table->softDeletes();

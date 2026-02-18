@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Category;
 use App\Models\News;
 
 class NewsController extends Controller
@@ -19,6 +20,20 @@ class NewsController extends Controller
 
     public function show(News $news){
         return view('news.show', ['post' => $news]);
+    }
+
+    public function category(Category $category)
+    {
+        $posts = News::query()
+            ->where('is_published', 1)
+            ->where('category_id', $category->id)
+            ->latest()
+            ->get();
+
+        return view('news.category', [
+            'category' => $category,
+            'posts' => $posts,
+        ]);
     }
 
     public function create() {

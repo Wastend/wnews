@@ -4,6 +4,9 @@
       $brandLogo = asset('favicon.png');
       $isHome = request()->routeIs('home.index');
       $isNews = request()->is('news') || request()->is('news/*');
+      $isCategoriesIndex = request()->routeIs('categories.index');
+      $isCategoryPage = request()->routeIs('news.category');
+      $currentCategoryId = optional(request()->route('category'))->id;
     @endphp
     <div class="px-3 py-2 bg-blue-200 text-dark">
       <div class="container">
@@ -27,13 +30,21 @@
                 <a href="{{ url('/news') }}" class="nav-link news-header__nav-link {{ $isNews ? 'active' : '' }}">Все новости</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle news-header__nav-link" role="button" aria-expanded="false">Категории</a>
+                <div class="d-flex align-items-center">
+                  <a href="{{ route('categories.index') }}" class="nav-link news-header__nav-link {{ ($isCategoriesIndex || $isCategoryPage) ? 'active' : '' }}">Категории</a>
+                  <a href="#" class="nav-link dropdown-toggle news-header__nav-link news-header__category-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Открыть список категорий"></a>
+                </div>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item news-header__dropdown-link" href="#">Политика</a></li>
-                  <li><a class="dropdown-item news-header__dropdown-link" href="#">Экономика</a></li>
-                  <li><a class="dropdown-item news-header__dropdown-link" href="#">Технологии</a></li>
-                  <li><a class="dropdown-item news-header__dropdown-link" href="#">Спорт</a></li>
-                  <li><a class="dropdown-item news-header__dropdown-link" href="#">Культура</a></li>
+                  @foreach($navCategories as $category)
+                    <li>
+                      <a
+                        class="dropdown-item news-header__dropdown-link {{ (int) $currentCategoryId === (int) $category->id ? 'active' : '' }}"
+                        href="{{ route('news.category', $category) }}"
+                      >
+                        {{ $category->title }}
+                      </a>
+                    </li>
+                  @endforeach
                 </ul>
               </li>
               <li>
@@ -65,22 +76,19 @@
           <li class="nav-item">
             <a href="{{ url('/news') }}" class="nav-link news-header__nav-link {{ $isNews ? 'active' : '' }}">Все новости</a>
           </li>
-          <li class="nav-item mt-2 mb-1 px-3 news-header__menu-label">Категории</li>
-          <li class="nav-item">
-            <a href="#" class="nav-link news-header__submenu-link">Политика</a>
+          <li class="nav-item mt-2 mb-1 px-3 news-header__menu-label">
+            <a href="{{ route('categories.index') }}" class="news-header__menu-title-link {{ ($isCategoriesIndex || $isCategoryPage) ? 'active' : '' }}">Категории</a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link news-header__submenu-link">Экономика</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link news-header__submenu-link">Технологии</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link news-header__submenu-link">Спорт</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link news-header__submenu-link">Культура</a>
-          </li>
+          @foreach($navCategories as $category)
+            <li class="nav-item">
+              <a
+                href="{{ route('news.category', $category) }}"
+                class="nav-link news-header__submenu-link {{ (int) $currentCategoryId === (int) $category->id ? 'active' : '' }}"
+              >
+                {{ $category->title }}
+              </a>
+            </li>
+          @endforeach
           <li class="nav-item mt-2">
             <a href="#" class="nav-link news-header__nav-link">Погода</a>
           </li>

@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <p class="lead text-muted mb-4">{{ $post->description }}</p>
-                <div class="mb-0">{!! $post->content !!}</div>
+                <div class="mb-0 news-show__content">{!! $post->content !!}</div>
             </div>
         </article>
     </div>

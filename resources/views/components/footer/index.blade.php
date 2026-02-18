@@ -1,7 +1,6 @@
 <footer class="news-footer mt-5">
     @php
       $brandLogo = asset('favicon.png');
-      $isNews = request()->is('news') || request()->is('news/*');
     @endphp
     <div class="container py-4 py-lg-5">
       <div class="news-footer__grid">
@@ -14,18 +13,20 @@
         <div class="news-footer__nav-col">
           <div class="news-footer__title">Общее</div>
           <ul class="news-footer__list">
-            <li><a href="{{ url('/news') }}" class="news-footer__link {{ $isNews ? 'active' : '' }}">Все новости</a></li>
+            <li><a href="{{ url('/news') }}" class="news-footer__link">Все новости</a></li>
             <li><a href="#" class="news-footer__link">Погода</a></li>
           </ul>
         </div>
         <div class="news-footer__nav-col">
-          <div class="news-footer__title">Категории</div>
+          <div class="news-footer__title">
+            <a href="{{ route('categories.index') }}" class="news-footer__title-link">Категории</a>
+          </div>
           <ul class="news-footer__list">
-            <li><a href="#" class="news-footer__link">Политика</a></li>
-            <li><a href="#" class="news-footer__link">Экономика</a></li>
-            <li><a href="#" class="news-footer__link">Технологии</a></li>
-            <li><a href="#" class="news-footer__link">Спорт</a></li>
-            <li><a href="#" class="news-footer__link">Культура</a></li>
+            @foreach($navCategories as $category)
+              <li>
+                <a href="{{ route('news.category', $category) }}" class="news-footer__link">{{ $category->title }}</a>
+              </li>
+            @endforeach
           </ul>
         </div>
       </div>
