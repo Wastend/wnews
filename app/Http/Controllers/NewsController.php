@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 use App\Models\News;
+use App\Models\Tag;
 
 class NewsController extends Controller
 {
     public function index() {
-        $posts = News::query()
+        $news = News::query()
             ->where('is_published', 1)
             ->latest()
             ->get();
 
-        return view('news.index', ['posts' => $posts]);
+        return view('news.index', ['news' => $news]);
     }
 
     public function show(News $news){
@@ -37,7 +38,9 @@ class NewsController extends Controller
     }
 
     public function create() {
-        return view('news.create');
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('news.create', ['categories' => $categories, 'tags' => $tags]);
     }
 
     public function store(Request $request) {
@@ -46,11 +49,17 @@ class NewsController extends Controller
             'description' => 'nullable|string',
             'content' => 'required|string',
             'image' => 'nullable|string|max:2048',
+            'is_published' => '',
+            'category_id' => '',
+            'tags' => '',
         ]);
 
-        $data['is_published'] = $request->boolean('is_published');
+        $tags = $data['tags'];
+        unset($data['tags']);
 
         $post = News::create($data);
+
+        $post->tags()->attach($tags);
 
         return redirect()
             ->route('news.show', $post)
@@ -58,7 +67,9 @@ class NewsController extends Controller
     }
 
     public function edit(News $news) {
-       return view('news.edit', ['post' => $news]);
+        $categories = Category::all();
+        $tags = Tag::all();
+       return view('news.edit', ['post' => $news, 'categories' => $categories, 'tags' => $tags]);
     }
 
     public function update(Request $request, News $news) {
@@ -66,12 +77,18 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'content' => 'required|string',
+            'category_id' => '',
+            'is_published' => '',
             'image' => 'nullable|string|max:2048',
+            'tags' => '',
         ]);
 
-        $data['is_published'] = $request->boolean('is_published');
-        $news->update($data);
+        $tags = $data['tags'];
+        unset($data['tags']);
 
+
+        $news->update($data);
+        $news->tags()->sync($tags);
         return redirect()
             ->route('news.show', $news)
             ->with('success', 'Новость успешно обновлена.');

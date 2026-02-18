@@ -8,37 +8,63 @@
                     <div class="card-body p-4">
                         <h1 class="h4 mb-4">Добавить новость</h1>
 
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
                         <form id="newsCreateForm" action="{{ route('news.store') }}" method="post">
                             @csrf
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Заголовок</label>
-                                <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" placeholder="Введите заголовок" required>
+                                <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" placeholder="Введите заголовок">
+                                @error('title')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for="description" class="form-label">Описание</label>
                                 <textarea class="form-control" id="description" name="description" rows="3" placeholder="Краткое описание новости">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for="content" class="form-label">Текст новости</label>
                                 <textarea class="form-control" id="content" name="content" rows="10">{{ old('content') }}</textarea>
+                                @error('content')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for="image" class="form-label">Изображение (URL)</label>
                                 <input type="text" class="form-control" id="image" name="image" value="{{ old('image') }}" placeholder="https://example.com/image.jpg">
+                                @error('image')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Категория новости</label>
+                                <select class="form-control" name="category_id" id="category">
+                                    @foreach($categories as $category)
+                                        <option
+                                            {{old('category_id') == $category->id ? 'selected' : ''}}
+                                            value="{{ $category->id }}">{{ $category->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tags" class="form-label">Тэги новости</label>
+                                <select class="form-select" multiple aria-label="тэги" name="tags[]" id="tags">
+                                    @foreach($tags as $tag)
+                                        <option value="{{ $tag->id }}">{{ $tag->title }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-check mb-4">
@@ -68,18 +94,6 @@
                         'insertTable', 'blockQuote', 'undo', 'redo'
                     ]
                 })
-                .then(function (editor) {
-                    form.addEventListener('submit', function (event) {
-                        var plainText = editor.getData().replace(/<[^>]*>/g, '').trim();
-                        if (!plainText) {
-                            event.preventDefault();
-                            alert('Заполните поле "Текст новости".');
-                        }
-                    });
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
         });
     </script>
 @endsection

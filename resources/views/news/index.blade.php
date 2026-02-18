@@ -6,7 +6,7 @@
             <a href="{{ route('news.create') }}" class="btn btn-primary">Создать новость</a>
         </div>
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-            @forelse($posts as $post)
+            @forelse($news as $post)
                 <div class="col">
                     @php
                         $imageSrc = $post->image

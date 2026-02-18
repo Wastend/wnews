@@ -8,37 +8,62 @@
                     <div class="card-body p-4">
                         <h1 class="h4 mb-4">Редактировать новость</h1>
 
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
                         <form id="newsCreateForm" action="{{ route('news.update', $post->id) }}" method="post">
                             @csrf
                             @method('patch')
                             <div class="mb-3">
                                 <label for="title" class="form-label">Заголовок</label>
-                                <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $post->title) }}" placeholder="Введите заголовок" required>
+                                <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $post->title) }}" placeholder="Введите заголовок">
+                                @error('title')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for="description" class="form-label">Описание</label>
                                 <textarea class="form-control" id="description" name="description" rows="3" placeholder="Краткое описание новости">{{ old('description', $post->description) }}</textarea>
+                                @error('description')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for="content" class="form-label">Текст новости</label>
                                 <textarea class="form-control" id="content" name="content" rows="10">{{ old('content', $post->content) }}</textarea>
+                                @error('content')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label for="image" class="form-label">Изображение (URL)</label>
                                 <input type="text" class="form-control" id="image" name="image" value="{{ old('image', $post->image) }}" placeholder="https://example.com/image.jpg">
+                                @error('image')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Категория новости</label>
+                                <select class="form-control" name="category_id" id="category">
+                                    @foreach($categories as $category)
+                                        <option {{$category->id === $post->category_id ? ' selected' : ''}} value="{{ $category->id }}">{{ $category->title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tags" class="form-label">Тэги новости</label>
+                                <select class="form-select" multiple aria-label="тэги" name="tags[]" id="tags">
+                                    @foreach($tags as $tag)
+                                        <option
+                                        @foreach($post->tags as $postTag)
+                                            {{$tag->id === $postTag->id ? ' selected' : ''}}
+                                        @endforeach
+                                        value="{{ $tag->id }}">{{ $tag->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-check mb-4">
