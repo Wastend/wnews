@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['namespace'=>'Home'], function(){
+    Route::get('/', 'IndexController')->name('home.index');
+});
 
 Route::group(['namespace'=>'News'], function(){
-    Route::get('/', 'IndexController')->name('home.index');
 
     Route::get('/news', 'IndexController')->name('news.index');
     Route::get('/news/create', 'CreateController')->name('news.create');
@@ -28,4 +30,14 @@ Route::group(['namespace'=>'News'], function(){
 
 Route::group(['namespace'=>'Category'], function(){
     Route::get('/categories', 'IndexController')->name('categories.index');
+});
+
+Route::group(['namespace'=>'Admin'], function(){
+    Route::get('/admin', 'IndexController')->name('admin.index');
+    Route::group(['namespace'=>'News'], function(){
+        Route::get('/admin/news', 'IndexController')->name('admin.news.index');
+    });
+    Route::group(['namespace'=>'Category'], function(){
+        Route::get('/admin/categories', 'IndexController')->name('admin.categories.index');
+    });
 });
