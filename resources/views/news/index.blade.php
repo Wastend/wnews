@@ -41,7 +41,7 @@
             @endforelse
         </div>
         <div class="d-flex justify-content-center mt-4">
-            {{ $news->links() }}
+            {{ $news->withQueryString()->links() }}
         </div>
     </div>
 @endsection

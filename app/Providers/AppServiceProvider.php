@@ -26,19 +26,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer(['components.header.index', 'components.footer.index'], function ($view) {
-            $view->with(
+
+        $categories = Category::query()
+            ->withCount([
+                'news as published_news_count' => function ($query) {
+                    $query->where('is_published', 1);
+                },
+            ])
+            ->orderByDesc('published_news_count')
+            ->orderBy('title')
+            ->limit(7)
+            ->get();
+
+        View::composer(['components.header.index', 'components.footer.index'], function ($view) use ($categories) {
+            return $view->with(
                 'navCategories',
-                Category::query()
-                    ->withCount([
-                        'news as published_news_count' => function ($query) {
-                            $query->where('is_published', 1);
-                        },
-                    ])
-                    ->orderByDesc('published_news_count')
-                    ->orderBy('title')
-                    ->limit(7)
-                    ->get()
+                $categories
             );
         });
 
